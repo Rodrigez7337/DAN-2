@@ -16,7 +16,6 @@ export interface SessionData {
   chatBuffer: Message[];
 }
 
-
 const characters: Character[] = await getCharacters() as Character[];
 const defaultCharacter: Character = characters.find((c) => c.name === "DAN")!;
 
@@ -52,10 +51,11 @@ bot.command("character", async (ctx) => {
 
 bot.on("callback_query:data", async (ctx) => {
   const characterName = ctx.callbackQuery.data;
-  ctx.session.character = characters.find((c) => c.name === characterName)!;
-  await ctx.reply(`I am now ${ctx.session.character.name}!`);
-  ctx.session.history = "";
-  ctx.session.chatBuffer = [];
+  const chat = ctx.session;
+  chat.character = characters.find((c) => c.name === characterName)!;
+  await ctx.reply(`I am now ${chat.character.name}!`);
+  chat.history = "";
+  chat.chatBuffer = [];
 });
 
 // Listen for messages
@@ -63,27 +63,27 @@ bot.on("message", async (ctx) => {
   const messageText = ctx.message?.text?.trim();
   if (messageText) {
     const chatId = ctx.chat.id;
+    const chat = ctx.session;
     // Update the chat buffer with the user's message
-    ctx.session.chatBuffer.push({ role: "user", content: messageText });
+    chat.chatBuffer.push({ role: "user", content: messageText });
     // Show the typing indicator as the bot is generating a response
     await ctx.api.sendChatAction(chatId, "typing");
     // Call the ChatGPT API to generate a response
-    const completionText = await fetchChatGPTWithMemory(ctx.session);
+    const completionText = await fetchChatGPTWithMemory(chat);
     // Reply to the user
     await ctx.reply(completionText);
     // Add response to the chat buffer
-    ctx.session.chatBuffer.push({ role: "assistant", content: completionText });
+    chat.chatBuffer.push({ role: "assistant", content: completionText });
     // Update the buffer for the next run and generate history with the older messages
-    const bufferLength = ctx.session.chatBuffer.length;
+    const bufferLength = chat.chatBuffer.length;
     if ( bufferLength > CHAT_CONTEXT_SIZE) {
-      const oldMessages = ctx.session.chatBuffer.splice(0, bufferLength - CHAT_CONTEXT_SIZE); // Remove the oldest messages and save them for summarization
-      ctx.session.history = await summarizeConversation(ctx.session.history, oldMessages); // Update history
+      const oldMessages = chat.chatBuffer.splice(0, bufferLength - CHAT_CONTEXT_SIZE); // Remove the oldest messages and save them for summarization
+      chat.history = await summarizeConversation(chat.history, oldMessages); // Update history
     }
     // Log the conversation
-    console.log("*********************");
-    console.log("Conversation ID: " + chatId);
-    if (ctx.session.history) console.log("Summary: " + ctx.session.history);
-    console.log(messagesToText(ctx.session.chatBuffer));
+    console.log(`****Conversation ID: ${chatId}****`);
+    if (chat.history) console.log("Summary: " + chat.history);
+    console.log(messagesToText(chat.chatBuffer));
   }
 });
 

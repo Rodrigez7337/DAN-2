@@ -10,7 +10,7 @@ console.log("Listening...")
 serve(async (req) => {
   if (req.method === "POST") {
     const url = new URL(req.url);
-    // Here, we are using the bot token as the secret since it is a secret only revealed to the bot.
+    // We are using the bot token as the secret since it is a secret only revealed to the bot.
     if (url.searchParams.get("secret") === bot.token) {
       try {
         return await handleUpdate(req);
