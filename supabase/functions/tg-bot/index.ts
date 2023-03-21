@@ -2,12 +2,11 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { webhookCallback } from "https://deno.land/x/grammy@v1.14.1/mod.ts";
 import bot from "./src/bot.ts";
 
-console.log(`Running function "tg-bot" on Supabase...`);
-
 // The webhook handler function: Handles requests from the Telegram bot’s webhook.
 const handleUpdate = webhookCallback(bot, "std/http");
 
-// HTTP server that listens for requests on port 8000:
+console.log("Listening...")
+
 serve(async (req) => {
   if (req.method === "POST") {
     const url = new URL(req.url);
