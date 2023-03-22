@@ -5,8 +5,6 @@ import bot from "./src/bot.ts";
 // The webhook handler function: Handles requests from the Telegram bot’s webhook.
 const handleUpdate = webhookCallback(bot, "std/http");
 
-console.log("Listening...")
-
 serve(async (req) => {
   if (req.method === "POST") {
     const url = new URL(req.url);
@@ -24,4 +22,4 @@ serve(async (req) => {
 });
 
 // Configure the bot’s webhook settings:
-// https://api.telegram.org/bot<BOT_TOKEN>/setWebhook?url=https://<PROJECT_NAME>.functions.supabase.co/telegram-bot?secret=<BOT_TOKEN>
+// https://api.telegram.org/bot<BOT_TOKEN>/setWebhook?url=https://<PROJECT_NAME>.functions.supabase.co/tg-bot?secret=<BOT_TOKEN>

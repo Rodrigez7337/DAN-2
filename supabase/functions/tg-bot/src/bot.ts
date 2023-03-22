@@ -37,7 +37,7 @@ function createInitialSessionData(): SessionData {
 
 bot.use(session({
   initial: createInitialSessionData,
-  storage: freeStorage<SessionData>(bot.token)
+  // storage: freeStorage<SessionData>(bot.token)
 }));
 
 bot.command("start", async (ctx) => {

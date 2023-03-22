@@ -12,7 +12,7 @@ The bot responds to all messages as "DAN", an AI assitant with many alter egos s
 3. Create your OpenAI API key.
 4. Create a Supabase project.
 4. Deploy tg-bot with Supabase Functions, set environment variables for Telegram
-   bot, OpenAI API key, Supabase URL & ANON keys.
+   bot, OpenAI API key.
 5. Set webhook for Telegram bot.
 
 ## Usage
