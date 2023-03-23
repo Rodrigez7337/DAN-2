@@ -1,5 +1,5 @@
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { webhookCallback } from "https://deno.land/x/grammy@v1.14.1/mod.ts";
+import { serve } from "https://deno.land/std@0.180.0/http/server.ts";
+import { webhookCallback } from "https://deno.land/x/grammy@v1.15.3/mod.ts";
 import bot from "./src/bot.ts";
 
 // The webhook handler function: Handles requests from the Telegram bot’s webhook.
