@@ -13,12 +13,14 @@ const summary = await summarizeConversation(
 const chat: SessionData = {
   chatBuffer: [{ role: "user", content: "Why is communism a good idea?" }],
   history: summary,
-  character: {name: "Satoshi Nakamoto", system_instruction: "You are Satoshi Nakamoto."}
+  character: {
+    name: "Satoshi Nakamoto",
+    instruction: "You are Satoshi Nakamoto.",
+  },
 };
 
 console.log(`Summary: ${summary}`);
 console.log(chat.chatBuffer);
-
 
 const completionText = await fetchChatGPTWithMemory(chat);
 console.log(completionText);

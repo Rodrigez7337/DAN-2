@@ -3,17 +3,17 @@
 This is a Telegram bot that uses the ChatGPT API to generate responses to user
 messages.
 
-The bot responds to all messages as "DAN", an AI assitant with many alter egos specialized at different tasks. The user can chat with DAN, or choose one of the special characters for help with specific tasks.
+The bot responds to all messages as "DAN", an AI assitant with many alter egos
+specialized at different tasks. The user can chat with DAN, or choose one of the
+special characters for help with specific tasks.
 
 ## Installation
 
 1. Clone the repository.
 2. Create a Telegram bot with @BotFather.
 3. Create your OpenAI API key.
-4. Create a Supabase project.
-4. Deploy tg-bot with Supabase Functions
-5. Set environment variables for Telegram bot, OpenAI API key.
-6. Set webhook for Telegram bot.
+4. Set environment variables for Telegram bot, OpenAI API key.
+5. Run mod.ts
 
 ## Usage
 

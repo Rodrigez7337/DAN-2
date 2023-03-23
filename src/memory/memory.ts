@@ -1,7 +1,6 @@
 import { fetchChatGPT, Message } from "../openai/openai.ts";
 import { SessionData } from "../bot.ts";
 
-
 export function messagesToText(messages: Message[]): string {
   return messages.map((message) => {
     if (message.role === "assistant") {
@@ -36,10 +35,9 @@ export async function summarizeConversation(
 export async function fetchChatGPTWithMemory(
   { chatBuffer, history, character }: SessionData,
 ): Promise<string> {
-  let systemPrompt = character.system_instruction;
+  let systemPrompt = character.instruction;
   if (history) {
-    systemPrompt +=
-      `
+    systemPrompt += `
       \nThe following is a history of the conversation between you and a user. You provides lots of specific details from this context.
       \n${history}
       `;

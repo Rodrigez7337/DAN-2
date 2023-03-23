@@ -27,7 +27,9 @@ export async function fetchChatGPT(
     );
     const data = await response.json();
     const messageText = data.choices[0].message.content;
-    if(!messageText) { throw new Error("No message text returned from OpenAI API!")}
+    if (!messageText) {
+      throw new Error("No message text returned from OpenAI API!");
+    }
     return messageText;
   } catch (error) {
     console.log(error);
