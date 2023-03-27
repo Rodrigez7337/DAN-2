@@ -7,8 +7,12 @@ export interface Message {
 
 export async function fetchChatGPT(
   promptMessages: Array<Message>,
+  systemPrompt?: string,
   temperature = 1,
-): Promise<string | undefined> {
+): Promise<string> {
+  const messages = systemPrompt
+    ? [{ role: "system", content: systemPrompt }, ...promptMessages]
+    : promptMessages;
   try {
     const response = await fetch(
       "https://api.openai.com/v1/chat/completions",
@@ -20,18 +24,30 @@ export async function fetchChatGPT(
         },
         body: JSON.stringify({
           model: "gpt-3.5-turbo",
-          messages: promptMessages,
+          messages: messages,
           temperature: temperature,
         }),
       },
     );
-    const data = await response.json();
-    const messageText = data.choices[0].message.content;
-    if (!messageText) {
-      throw new Error("No message text returned from OpenAI API!");
+    if (response.ok) {
+      const data = await response.json();
+      const messageText = data.choices[0].message.content;
+      return messageText;
+    } else {
+      throw new Error("Could not fetch response from OpenAI");
     }
-    return messageText;
   } catch (error) {
     console.log(error);
   }
+  return "Something went wrong! Please contact my human handler @ferdousbhai 😕";
+}
+
+export function messagesToText(messages: Message[]): string {
+  return messages.map((message) => {
+    if (message.role === "assistant") {
+      return `You: ${message.content}`;
+    } else if (message.role === "user") {
+      return `${message.role}: ${message.content}`;
+    }
+  }).filter(Boolean).join("\n");
 }
