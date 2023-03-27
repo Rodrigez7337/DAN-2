@@ -66,43 +66,11 @@ bot.on("message", (ctx) => {
   }
 });
 
+setInterval(async ()=>{
+  await processQueuedTasks();
+}, 1000);
+
 export default bot;
-
-// get and remove the front element of the queue
-const dq = queue.dequeue();
-
-// Run until the queue is empty:
-while (dq) {
-  const { key: chatId, value: chat } = dq as {
-    key: number;
-    value: SessionData;
-  };
-  // Show the typing indicator as the bot is generating a response
-  await bot.api.sendChatAction(chatId, "typing");
-  // Call the ChatGPT API to generate a response
-  const completionText = await fetchChatGPT(
-    chat.chatBuffer,
-    chat.character.instruction,
-  );
-  // Reply to the user
-  await bot.api.sendMessage(chatId, completionText);
-  // Add response to the chat buffer
-  chat.chatBuffer.push({ role: "assistant", content: completionText });
-  // Update the buffer for the next run and generate history with the older messages
-  const bufferLength = chat.chatBuffer.length;
-  if (bufferLength > CHAT_CONTEXT_SIZE) {
-    chat.chatBuffer.splice(
-      0,
-      bufferLength - CHAT_CONTEXT_SIZE,
-    ); // Remove the oldest messages
-  }
-  // Log the conversation
-  console.log(`****Conversation ID: ${chatId}****`);
-  if (chat.history) {
-    console.log("Summary: " + chat.history);
-  }
-  console.log(messagesToText(chat.chatBuffer));
-}
 
 
 async function displayCharacterOptions(
@@ -116,4 +84,41 @@ async function displayCharacterOptions(
       ]),
     },
   });
+}
+
+async function processQueuedTasks() {
+  // get and remove the front element of the queue
+  const dq = queue.dequeue();
+  // Run if the queue is not empty:
+  if(dq) {
+    const { key: chatId, value: chat } = dq as {
+      key: number;
+      value: SessionData;
+    };
+    // Show the typing indicator as the bot is generating a response
+    await bot.api.sendChatAction(chatId, "typing");
+    // Call the ChatGPT API to generate a response
+    const completionText = await fetchChatGPT(
+      chat.chatBuffer,
+      chat.character.instruction
+    );
+    // Reply to the user
+    await bot.api.sendMessage(chatId, completionText);
+    // Add response to the chat buffer
+    chat.chatBuffer.push({ role: "assistant", content: completionText });
+    // Update the buffer for the next run and generate history with the older messages
+    const bufferLength = chat.chatBuffer.length;
+    if(bufferLength > CHAT_CONTEXT_SIZE) {
+      chat.chatBuffer.splice(
+        0,
+        bufferLength - CHAT_CONTEXT_SIZE
+      ); // Remove the oldest messages
+    }
+    // Log the conversation
+    console.log(`****Conversation ID: ${chatId}****`);
+    if(chat.history) {
+      console.log("Summary: " + chat.history);
+    }
+    console.log(messagesToText(chat.chatBuffer));
+  }
 }
