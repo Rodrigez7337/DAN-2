@@ -34,12 +34,14 @@ export async function fetchChatGPT(
       const messageText = data.choices[0].message.content;
       return messageText;
     } else {
+      console.log(messages);
+      console.log(response);
       throw new Error("Could not fetch response from OpenAI");
     }
   } catch (error) {
     console.log(error);
   }
-  return "Something went wrong! Please contact my human handler @ferdousbhai 😕";
+  return "Something went wrong! 😕";
 }
 
 export function messagesToText(messages: Message[]): string {

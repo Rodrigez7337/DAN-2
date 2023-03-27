@@ -59,7 +59,7 @@ bot.on("message", (ctx) => {
     chat.chatBuffer.push({
       role: "user",
       content: replyToMessageText
-        ? `"${replyToMessageText}"\n${messageText}`
+        ? `${replyToMessageText}\n\n${messageText}`
         : messageText,
     });
     queue.enqueue({ key: chatId, value: chat });
@@ -116,9 +116,9 @@ async function processQueuedTasks() {
     }
     // Log the conversation
     console.log(`****Conversation ID: ${chatId}****`);
-    if(chat.history) {
-      console.log("Summary: " + chat.history);
-    }
+    // if(chat.history) {
+    //   console.log("Summary: " + chat.history);
+    // }
     console.log(messagesToText(chat.chatBuffer));
   }
 }
