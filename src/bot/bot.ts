@@ -7,7 +7,7 @@ import {
 import { freeStorage } from "https://deno.land/x/grammy_storages@v2.1.4/free/src/mod.ts";
 import { botToken } from "../../config.ts";
 import { fetchChatGPT, messagesToText } from "../openai/openai.ts";
-import { Character, characters } from "../character/character.ts";
+import { Character, characters, defaultCharacter } from "../character/character.ts";
 import { queue } from "../queue.ts";
 import { createInitialSessionData, SessionData } from "../session.ts";
 
@@ -37,7 +37,7 @@ bot.command("character", async (ctx) => {
 
 bot.on("callback_query:data", async (ctx) => {
   const characterName = ctx.callbackQuery.data;
-  const character = characters.find((c) => c.name === characterName)!;
+  const character = characters.find((c) => c.name === characterName) || defaultCharacter;
   ctx.session.character = character;
   ctx.session.chatBuffer = [];
   await ctx.reply(`I am now ${ctx.session.character.name}!`);
@@ -113,10 +113,7 @@ async function processQueuedTasks() {
       ); // Remove the oldest messages
     }
     // Log the conversation
-    console.log(`****Conversation ID: ${chatId}****`);
-    // if(chat.history) {
-    //   console.log("Summary: " + chat.history);
-    // }
     console.log(messagesToText(chat.chatBuffer));
+    console.log(`****Conversation ID: ${chatId}****`);
   }
 }
