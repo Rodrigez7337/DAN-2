@@ -11,7 +11,6 @@ import { Character, characters } from "../character/character.ts";
 import { queue } from "../queue.ts";
 import { createInitialSessionData, SessionData } from "../session.ts";
 
-
 const CHAT_CONTEXT_SIZE = 2; // Number of older messages to keep in the chat buffer
 
 // Flavor the context type to include sessions.
@@ -66,12 +65,11 @@ bot.on("message", (ctx) => {
   }
 });
 
-setInterval(async ()=>{
+setInterval(async () => {
   await processQueuedTasks();
 }, 1000);
 
 export default bot;
-
 
 async function displayCharacterOptions(
   chatId: number,
@@ -90,7 +88,7 @@ async function processQueuedTasks() {
   // get and remove the front element of the queue
   const dq = queue.dequeue();
   // Run if the queue is not empty:
-  if(dq) {
+  if (dq) {
     const { key: chatId, value: chat } = dq as {
       key: number;
       value: SessionData;
@@ -100,7 +98,7 @@ async function processQueuedTasks() {
     // Call the ChatGPT API to generate a response
     const completionText = await fetchChatGPT(
       chat.chatBuffer,
-      chat.character.instruction
+      chat.character.instruction,
     );
     // Reply to the user
     await bot.api.sendMessage(chatId, completionText);
@@ -108,10 +106,10 @@ async function processQueuedTasks() {
     chat.chatBuffer.push({ role: "assistant", content: completionText });
     // Update the buffer for the next run and generate history with the older messages
     const bufferLength = chat.chatBuffer.length;
-    if(bufferLength > CHAT_CONTEXT_SIZE) {
+    if (bufferLength > CHAT_CONTEXT_SIZE) {
       chat.chatBuffer.splice(
         0,
-        bufferLength - CHAT_CONTEXT_SIZE
+        bufferLength - CHAT_CONTEXT_SIZE,
       ); // Remove the oldest messages
     }
     // Log the conversation

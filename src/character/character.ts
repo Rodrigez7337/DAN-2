@@ -24,5 +24,6 @@ export async function getCharacters(): Promise<Character[]> {
 }
 
 export const characters: Character[] = await getCharacters();
-export const defaultCharacter: Character = characters.find((c) => c.name === "DAN")!;
-
+export const defaultCharacter: Character = characters.find((c) =>
+  c.name === "DAN"
+)!;

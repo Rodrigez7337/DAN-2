@@ -18,7 +18,7 @@ serve(async (req) => {
     }
   }
   // Handle any request that are not from the webhook:
-  return new Response('not allowed', { status: 405 })
+  return new Response("not allowed", { status: 405 });
 });
 
 // Configure the bot’s webhook settings:

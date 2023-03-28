@@ -29,19 +29,12 @@ export async function fetchChatGPT(
         }),
       },
     );
-    if (response.ok) {
-      const data = await response.json();
-      const messageText = data.choices[0].message.content;
-      return messageText;
-    } else {
-      console.log(messages);
-      console.log(response);
-      throw new Error("Could not fetch response from OpenAI");
-    }
+    const data = await response.json();
+    const messageText = data.choices[0].message.content;
+    return messageText;
   } catch (error) {
-    console.log(error);
+    throw new Error(error);
   }
-  return "Something went wrong! 😕";
 }
 
 export function messagesToText(messages: Message[]): string {
