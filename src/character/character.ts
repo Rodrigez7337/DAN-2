@@ -3,7 +3,7 @@ export interface Character {
   instruction: string;
 }
 
-export async function getCharacters(): Promise<Character[]> {
+async function getCharacters(): Promise<Character[]> {
   const characters: Character[] = [];
   const characterFilesPath = "./src/character/characters";
   for await (const entry of Deno.readDir(characterFilesPath)) {

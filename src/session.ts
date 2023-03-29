@@ -4,7 +4,6 @@ import { Message } from "./openai/openai.ts";
 // Define the shape of each Chat session.
 export interface SessionData {
   character: Character;
-  history: string;
   chatBuffer: Message[];
 }
 
@@ -12,7 +11,6 @@ export interface SessionData {
 export function createInitialSessionData(): SessionData {
   return {
     character: defaultCharacter,
-    history: "",
     chatBuffer: [],
   };
 }
