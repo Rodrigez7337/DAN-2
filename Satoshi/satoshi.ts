@@ -10,7 +10,7 @@ const CHAT_CONTEXT_SIZE = 4; // Number of older messages to keep in the chat buf
 
 const character: Character = {
   name: "Satoshi Nakamoto",
-  instruction: await Deno.readTextFile("./instruction.txt"),
+  instruction: await Deno.readTextFile("./Satoshi/instruction.txt"),
 };
 
 // Define the initial session value.
