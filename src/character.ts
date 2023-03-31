@@ -3,17 +3,18 @@ export interface Character {
   instruction: string;
 }
 
+export const characters: Character[] = await getCharacters();
+
 async function getCharacters(): Promise<Character[]> {
   const characters: Character[] = [];
-  const characterFilesPath = "./src/character/characters";
+  const characterFilesPath = "./characters";
   for await (const entry of Deno.readDir(characterFilesPath)) {
     if (entry.isFile) {
       const filename = entry.name;
-      const characterName = filename.slice(0, filename.lastIndexOf("."));
       const character: Character = {
-        name: characterName,
+        name: filename.slice(0, filename.lastIndexOf(".")),
         instruction: await Deno.readTextFile(
-          `${characterFilesPath}/${entry.name}`,
+          `${characterFilesPath}/${filename}`,
         ),
       };
       characters.push(character);
@@ -22,8 +23,3 @@ async function getCharacters(): Promise<Character[]> {
 
   return characters;
 }
-
-export const characters: Character[] = await getCharacters();
-export const defaultCharacter: Character = characters.find((c) =>
-  c.name === "DAN"
-)!;

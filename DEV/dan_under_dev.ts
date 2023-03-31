@@ -1,25 +1,26 @@
-import {
-  Bot,
-  Context,
-  session,
-  SessionFlavor,
-} from "https://deno.land/x/grammy@v1.15.3/mod.ts";
-import { botToken } from "../../config.ts";
-import { fetchChatGPT, messagesToText } from "../openai/openai.ts";
-import {
-  Character,
-  characters,
-  defaultCharacter,
-} from "../character/character.ts";
-import { queue } from "../queue.ts";
-import { createInitialSessionData, SessionData } from "../session.ts";
+import { Bot, session } from "https://deno.land/x/grammy@v1.15.3/mod.ts";
+import { MyContext } from "../src/bot.ts";
+import { DEVToken } from "../config.ts";
+import { fetchChatGPT, messagesToText } from "../src/openai/openai.ts";
+import { Character, characters } from "../src/character.ts";
+import { queue } from "../src/queue.ts";
+import { SessionData } from "../src/session.ts";
 
 const CHAT_CONTEXT_SIZE = 4; // Number of older messages to keep in the chat buffer
 
-// Flavor the context type to include sessions.
-type MyContext = Context & SessionFlavor<SessionData>;
+const defaultCharacter: Character = characters.find((c) =>
+  c.name === "DAN"
+)!;
 
-const bot = new Bot<MyContext>(botToken);
+// Define the initial session value.
+export function createInitialSessionData(): SessionData {
+  return {
+    character: defaultCharacter,
+    chatBuffer: [],
+  };
+}
+
+const bot = new Bot<MyContext>(DEVToken);
 
 // Use the session middleware to keep track of chats
 bot.use(session({ initial: createInitialSessionData }));
@@ -98,6 +99,7 @@ bot.on("message", (ctx) => {
 });
 
 export default bot;
+
 
 async function displayCharacterOptions(
   chatId: number,
