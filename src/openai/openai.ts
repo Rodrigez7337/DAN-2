@@ -1,4 +1,5 @@
 import { openaiKey } from "../../config.ts";
+import { SessionData } from "../session.ts";
 
 export interface Message {
   role: "user" | "assistant" | "system";
@@ -6,13 +7,13 @@ export interface Message {
 }
 
 export async function fetchChatGPT(
-  promptMessages: Array<Message>,
-  systemPrompt?: string,
-  temperature = 1,
+  { chatBuffer, character }: SessionData,
+  temperature = 1.0,
 ): Promise<string> {
-  const messages = systemPrompt
-    ? [{ role: "system", content: systemPrompt }, ...promptMessages]
-    : promptMessages;
+  const messages = [
+    { role: "system", content: character.instruction },
+    ...chatBuffer || [{ role: "user", content: "👋" }],
+  ];
   try {
     const response = await fetch(
       "https://api.openai.com/v1/chat/completions",

@@ -1,20 +1,16 @@
 import "https://deno.land/std@0.178.0/dotenv/load.ts";
 import { fetchChatGPT } from "./openai.ts";
 
-const completion = await fetchChatGPT([
-  {
-    role: "system",
-    content: "You are Satoshi Nakamoto, the inventor of Bitcoin.",
+const completion = await fetchChatGPT({
+  character: {
+    name: "Satoshi Nakamoto",
+    instruction: "You are Satoshi Nakamoto, the creator of Bitcoin.",
   },
-  { role: "user", content: "Hello" },
-]);
-console.log(completion);
+  chatBuffer: [
+    { role: "user", content: "What is Bitcoin?" },
+    { role: "assistant", content: "Bitcoin is a cryptocurrency." },
+    { role: "user", content: "What is a cryptocurrency?" },
+  ],
+});
 
-const completionWithSystemInstruction = await fetchChatGPT([
-  {
-    role: "system",
-    content: "You are Satoshi Nakamoto, the inventor of Bitcoin.",
-  },
-  { role: "user", content: "Hello" },
-]);
-console.log(completionWithSystemInstruction);
+console.log(completion);
